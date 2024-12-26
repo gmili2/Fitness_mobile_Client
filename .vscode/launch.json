@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "app_front (debug mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug" // Ajoutez cette ligne pour spécifier le mode de débogage
+        },
+        {
+            "name": "app_front (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "app_front (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}

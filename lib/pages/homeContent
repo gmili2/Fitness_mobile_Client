@@ -1,0 +1,78 @@
+import 'dart:convert'; // Nécessaire pour jsonEncode
+import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
+import 'package:app_front/controller/user_controller.dart';
+import 'package:app_front/model/user.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
+
+class HomeContent extends StatefulWidget {
+  const HomeContent({Key? key}) : super(key: key);
+
+  @override
+  State<HomeContent> createState() => _HomeContentState();
+}
+
+class _HomeContentState extends State<HomeContent> {
+  final UserController controller = UserController();
+  User? user; // Déclare `user` comme nullable jusqu'à ce qu'il soit initialisé.
+  @override
+  void initState() {
+    super.initState();
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    await initLocalStorage();
+    final responseMe = await controller.me();
+    localStorage.setItem("user", jsonEncode(responseMe));
+    user = User.fromJson(responseMe);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+           Text(
+            'an for you',
+            style: TextStyle(
+                color: Colors.red, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 20),
+          Center(
+          child: PrettyQr(
+            data:  'N/A', // Assurez-vous que `uuid` n'est pas null
+            size: 200,          // Taille du QR code
+            roundEdges: true,   // Arrondir les bords
+            errorCorrectLevel: QrErrorCorrectLevel.M, // Niveau de correction d'erreur
+          ),
+        ),
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 0.7,
+              ),
+              itemCount: 6,
+              itemBuilder: (context, index) {
+                return Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: const DecorationImage(
+                      image: AssetImage('assets/movie_poster.jpg'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
